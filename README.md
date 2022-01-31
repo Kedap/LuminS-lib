@@ -1,4 +1,4 @@
-<h1 align="center">LuminS</h1>
+<h1 align="center">Lib for LuminS</h1>
 <h3 align="center">Luminous Synchronize</h3>
 <h4 align="center">A fast and reliable alternative to rsync for synchronizing local files</h4>
 
@@ -24,72 +24,41 @@
 </table>
 
 
-## Usage
+## Copy
 
-```bash
-USAGE:
-    lms [SUBCOMMAND]
+```rust
+use lms_lib::{core, parse::Flag};
+use std::path::Path;
 
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
-SUBCOMMANDS:
-    cp      Multithreaded directory copy
-    help    Prints this message or the help of the given subcommand(s)
-    rm      Multithreaded directory remove
-    sync    Multithreaded directory synchronization [aliases: s]
+main () {
+	let src = Path::new("/foo/bar/hello.txt");
+	let dest = Path::new("/bar/foo/hi.txt");
+	core::copy(&src, &dest, Flag::empty())?;
+}
 ```
 #### Sync
 
-```bash
-USAGE:
-    lms sync [FLAGS] <SOURCE> <DESTINATION>
+```rust
+use lms_lib::{core, parse::Flag};
+use std::path::Path;
 
-FLAGS:
-    -h, --help          Prints help information
-    -n, --nodelete      Do not delete any destination files
-    -s, --secure        Use a cryptographic hash function for hashing similar files
-    -S, --sequential    Copy files sequentially instead of in parallel
-    -V, --version       Prints version information
-    -v, --verbose       Verbose outputs
-
-ARGS:
-    <SOURCE>         Source directory
-    <DESTINATION>    Destination directory
-```
-
-#### Copy
-
-```bash
-USAGE:
-    lms cp [FLAGS] <SOURCE> <DESTINATION>
-
-FLAGS:
-    -h, --help          Prints help information
-    -S, --sequential    Copy files sequentially instead of in parallel
-    -V, --version       Prints version information
-    -v, --verbose       Verbose outputs
-
-ARGS:
-    <SOURCE>         Source directory
-    <DESTINATION>    Destination directory
+main () {
+	let src = Path::new("/foo/bar/hello.txt");
+	let dest = Path::new("/bar/foo/hi.txt");
+	core::synchronize(&src, &dest, Flag::empty())?;
+}
 ```
 
 #### Remove
 
-```bash
-USAGE:
-    lms rm [FLAGS] <TARGET>...
+```rust
+use lms_lib::{core, parse::Flag};
+use std::path::Path;
 
-FLAGS:
-    -h, --help          Prints help information
-    -S, --sequential    Delete files sequentially instead of in parallel
-    -V, --version       Prints version information
-    -v, --verbose       Verbose outputs
-
-ARGS:
-    <TARGET>    Target directory
+main () {
+	let target = Path::new("/bar/foo/hi.txt");
+	core::remove(&target, Flag::empty())?;
+}
 ```
 
 ## Benchmarks
@@ -118,24 +87,6 @@ Using [hyperfine](https://github.com/sharkdp/hyperfine) on an Intel i7-8550U wit
 | rm -rf                 | 2               | 27.4 ms ± 0.8 ms              |
 
 Of course, these benchmarks can be highly dependent on CPU and IO devices.
-
-## Build
-
-First [install](https://www.rust-lang.org/tools/install) Rust (recommended using rustup).
-
-```zsh
-$ git clone https://github.com/wchang22/LuminS.git
-$ cd LuminS
-$ cargo build --release
-```
-
-## Install
-
-Using cargo,
-
-```bash
-$ cargo install lms
-```
 
 ## Contributions
 

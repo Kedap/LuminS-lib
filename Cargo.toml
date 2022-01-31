@@ -1,12 +1,12 @@
 [package]
-name = "lms-lib"
+name = "lms_lib"
 version = "0.4.0"
 authors = ["Wesley Chang <wesleycanada@gmail.com>", "kedap <kedap.dev@protonmail.com>"]
 edition = "2018"
 license = "MIT"
 description = "A fast and reliable alternative to rsync for synchronizing local files"
 
-repository = "https://github.com/wchang22/lumins"
+repository = "https://github.com/kedap/lumins-lib"
 readme = "./README.md"
 keywords = ["rsync", "linux", "file", "cli", "sync"]
 categories = ["command-line-utilities", "filesystem", ]
