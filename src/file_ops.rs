@@ -1414,7 +1414,7 @@ mod test_copy_files {
         assert_eq!(
             get_all_files(TEST_DIR_OUT).unwrap(),
             FileSets {
-                files: files,
+                files,
                 dirs: dirs.clone(),
                 symlinks: HashSet::new(),
             }
