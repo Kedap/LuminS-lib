@@ -9,8 +9,6 @@ use clap::ArgMatches;
 use env_logger::Builder;
 use log::LevelFilter;
 
-use crate::progress::PROGRESS_BAR;
-
 bitflags! {
     /// Enum to represent command line flags
     pub struct Flag: u32 {
@@ -165,10 +163,6 @@ pub fn parse_args<'a>(args: &'a ArgMatches) -> Result<ParseResult<'a>, ()> {
 /// Sets up the environment based on given flags
 pub fn set_env(flags: Flag) {
     let mut builder = Builder::new();
-    builder.format(|_, record| {
-        PROGRESS_BAR.println(format!("{}", record.args()));
-        Ok(())
-    });
 
     // If verbose, enable info logging
     if flags.contains(Flag::VERBOSE) {

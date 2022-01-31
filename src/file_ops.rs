@@ -12,8 +12,7 @@ use log::{error, info};
 use rayon::prelude::*;
 use seahash;
 
-use crate::lumins::parse::Flag;
-use crate::progress::PROGRESS_BAR;
+use crate::parse::Flag;
 
 /// Interface for all file structs to perform common operations
 ///
@@ -248,7 +247,6 @@ where
 {
     files_to_compare.for_each(|file| {
         compare_and_copy_file(file, src, dest, flags);
-        PROGRESS_BAR.inc(2);
     });
 }
 
@@ -309,7 +307,6 @@ where
 {
     files_to_copy.for_each(|file| {
         copy_file(file, &src, &dest);
-        PROGRESS_BAR.inc(1);
     });
 }
 
@@ -349,7 +346,6 @@ where
     files_to_delete.for_each(|file| {
         let path = [&PathBuf::from(&location), file.path()].iter().collect();
         file.remove(&path);
-        PROGRESS_BAR.inc(1);
     });
 }
 
@@ -369,7 +365,6 @@ where
     for file in files_to_delete {
         let path = [&PathBuf::from(&location), file.path()].iter().collect();
         file.remove(&path);
-        PROGRESS_BAR.inc(1);
     }
 }
 
@@ -1479,8 +1474,8 @@ mod test_copy_files {
     #[test]
     #[cfg(target_family = "windows")]
     fn copy_symlink() {
-        use std::os::windows::fs as wfs;
         use std::env;
+        use std::os::windows::fs as wfs;
         const TEST_DIR: &str = "test_copy_files_copy_symlink";
         const TEST_DIR_OUT: &str = "test_copy_files_copy_symlink_out_seq";
         let CURRENT_PATH: PathBuf = env::current_dir().unwrap();
@@ -1516,8 +1511,8 @@ mod test_copy_files {
             }
         );
 
-       fs::remove_dir_all(TEST_DIR).unwrap();
-       fs::remove_dir_all(TEST_DIR_OUT).unwrap();
+        fs::remove_dir_all(TEST_DIR).unwrap();
+        fs::remove_dir_all(TEST_DIR_OUT).unwrap();
     }
 }
 
