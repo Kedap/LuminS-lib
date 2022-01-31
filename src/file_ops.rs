@@ -264,30 +264,30 @@ where
     S: FileOps,
 {
     if flags.contains(Flag::SECURE) {
-        let src_file_hash_secure = hash_file_secure(file_to_compare, &src);
+        let src_file_hash_secure = hash_file_secure(file_to_compare, src);
 
         if src_file_hash_secure.is_none() {
-            copy_file(file_to_compare, &src, &dest);
+            copy_file(file_to_compare, src, dest);
             return;
         }
 
-        let dest_file_hash_secure = hash_file_secure(file_to_compare, &dest);
+        let dest_file_hash_secure = hash_file_secure(file_to_compare, dest);
 
         if src_file_hash_secure != dest_file_hash_secure {
-            copy_file(file_to_compare, &src, &dest);
+            copy_file(file_to_compare, src, dest);
         }
     } else {
-        let src_file_hash = hash_file(file_to_compare, &src);
+        let src_file_hash = hash_file(file_to_compare, src);
 
         if src_file_hash.is_none() {
-            copy_file(file_to_compare, &src, &dest);
+            copy_file(file_to_compare, src, dest);
             return;
         }
 
-        let dest_file_hash = hash_file(file_to_compare, &dest);
+        let dest_file_hash = hash_file(file_to_compare, dest);
 
         if src_file_hash != dest_file_hash {
-            copy_file(file_to_compare, &src, &dest);
+            copy_file(file_to_compare, src, dest);
         }
     }
 }
@@ -306,7 +306,7 @@ where
     S: FileOps + Sync + 'a,
 {
     files_to_copy.for_each(|file| {
-        copy_file(file, &src, &dest);
+        copy_file(file, src, dest);
     });
 }
 
@@ -465,7 +465,7 @@ where
 /// * Ok: A `FileSets` containing a set of files a set of directories
 /// * Error: If `src` is an invalid directory
 pub fn get_all_files(src: &str) -> Result<FileSets, io::Error> {
-    get_all_files_helper(&PathBuf::from(&src), &src)
+    get_all_files_helper(&PathBuf::from(&src), src)
 }
 
 /// Recursive helper for `get_all_files`
@@ -630,7 +630,7 @@ mod test_get_all_files {
 
         fs::create_dir_all([TEST_DIR, TEST_SUB_DIR].join("/")).unwrap();
 
-        let file_sets = get_all_files(&TEST_DIR).unwrap();
+        let file_sets = get_all_files(TEST_DIR).unwrap();
         let mut dir_set = HashSet::new();
         dir_set.insert(Dir {
             path: PathBuf::from(&TEST_SUB_DIR),
@@ -1414,7 +1414,7 @@ mod test_copy_files {
         assert_eq!(
             get_all_files(TEST_DIR_OUT).unwrap(),
             FileSets {
-                files: files.clone(),
+                files: files,
                 dirs: dirs.clone(),
                 symlinks: HashSet::new(),
             }
@@ -1539,7 +1539,7 @@ mod test_compare_and_copy_files {
         };
 
         let mut files_to_compare = HashSet::new();
-        files_to_compare.insert(file_to_compare.clone());
+        files_to_compare.insert(file_to_compare);
 
         let mut flags = Flag::empty();
         flags |= Flag::SECURE;
@@ -1573,7 +1573,7 @@ mod test_compare_and_copy_files {
             size: fs::metadata([TEST_DIR, "main.rs"].join("/")).unwrap().len(),
         };
         let mut files_to_compare = HashSet::new();
-        files_to_compare.insert(file_to_compare.clone());
+        files_to_compare.insert(file_to_compare);
 
         compare_and_copy_files(
             files_to_compare.par_iter(),
